@@ -1,0 +1,146 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&family=Noto+Naskh+Arabic:wght@400;600;700&family=Noto+Nastaliq+Urdu:wght@400;600&family=Noto+Sans+Devanagari:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─────────────────────────────────────────────────────────
+   KEYFRAMES — global scope so inline style="animation:..."
+   references work correctly in both dev and production.
+   NEVER put these inside @layer.
+───────────────────────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes floatY {
+  0%, 100% { transform: translateY(0px); }
+  50%      { transform: translateY(-6px); }
+}
+
+@keyframes panSlow {
+  0%   { transform: scale(1.06) translateX(0); }
+  100% { transform: scale(1.06) translateX(-2%); }
+}
+
+@keyframes shimmer {
+  from { background-position: -300% 0; }
+  to   { background-position:  300% 0; }
+}
+
+/* ─────────────────────────────────────────────────────────
+   BASE
+───────────────────────────────────────────────────────── */
+@layer base {
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Jost', system-ui, sans-serif;
+    background-color: #FDFAF4;
+    color: #4A2C0A;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Arabic */
+  html[dir='rtl'] body:not(.urdu):not(.hindi) {
+    font-family: 'Noto Naskh Arabic', 'Jost', sans-serif;
+  }
+  /* Urdu */
+  html[dir='rtl'] body.urdu {
+    font-family: 'Noto Nastaliq Urdu', sans-serif;
+    line-height: 2.1;
+  }
+  /* Hindi */
+  body.hindi {
+    font-family: 'Noto Sans Devanagari', 'Jost', sans-serif;
+  }
+
+  /* Focus ring */
+  input:focus,
+  textarea:focus,
+  select:focus {
+    outline: none;
+    border-color: #C9A84C;
+    box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.12);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────
+   UTILITIES
+───────────────────────────────────────────────────────── */
+@layer utilities {
+
+  /* Staggered hero entrance animations */
+  .au-1 { animation: fadeUp 0.65s 0.05s ease both; }
+  .au-2 { animation: fadeUp 0.65s 0.18s ease both; }
+  .au-3 { animation: fadeUp 0.65s 0.32s ease both; }
+  .au-4 { animation: fadeUp 0.65s 0.46s ease both; }
+  .au-5 { animation: fadeUp 0.65s 0.60s ease both; }
+
+  /* Scroll reveal — JS adds .visible */
+  .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.65s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Card hover — subtle elevation */
+  .card-hover {
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(74, 44, 10, 0.08);
+  }
+
+  /* Gold shimmer divider */
+  .shimmer-line {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      #C9A84C 25%,
+      #E8D5A3 50%,
+      #C9A84C 75%,
+      transparent 100%
+    );
+    background-size: 300% 100%;
+    animation: shimmer 5s linear infinite;
+  }
+
+  /* Responsive section padding — scales with viewport */
+  .section-py {
+    padding-top:    clamp(56px, 6.5vw, 96px);
+    padding-bottom: clamp(56px, 6.5vw, 96px);
+  }
+  .section-px {
+    padding-left:  clamp(20px, 4vw, 48px);
+    padding-right: clamp(20px, 4vw, 48px);
+  }
+
+  /* Image container stability — prevents collapse on load failure */
+  .img-wrap {
+    position: relative;
+    overflow: hidden;
+    background-color: #E8D5B7; /* beige-dark fallback */
+  }
+  .img-wrap img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  /* RTL utilities */
+  html[dir='rtl'] .rtl-flip  { transform: scaleX(-1); }
+  html[dir='rtl'] .ltr-only  { display: none; }
+}
